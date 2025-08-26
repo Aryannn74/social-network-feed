@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { ApolloProvider } from "@apollo/client";    // Import ApolloProvider here
 import App from "./App.jsx";
-import client from "./apollo/client";                // Import the Apollo client you created
+import client from "./apollo/Client";                // Import the Apollo client you created
 import "./main.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
