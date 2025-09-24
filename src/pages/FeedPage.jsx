@@ -8,10 +8,10 @@ import { Home, Search, PlusSquare, Heart, User, MessageCircle } from "lucide-rea
 
 export default function FeedPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
 
-  const [posts, setPosts] = useState([]);
-
+  // Add a new post
   const addPost = (caption, image) => {
     const newPost = {
       id: Date.now(),
@@ -38,9 +38,7 @@ export default function FeedPage() {
           likes: "5",
           comments: "2",
           shares: "1",
-          image: `https://picsum.photos/400/300?random=${Math.floor(
-            Math.random() * 1000
-          )}`,
+          image: `https://picsum.photos/400/300?random=${Math.floor(Math.random() * 1000)}`,
         },
         {
           id: Date.now() + Math.random(),
@@ -50,17 +48,10 @@ export default function FeedPage() {
           likes: "8",
           comments: "3",
           shares: "2",
-          image: `https://picsum.photos/400/300?random=${Math.floor(
-            Math.random() * 1000
-          )}`,
+          image: `https://picsum.photos/400/300?random=${Math.floor(Math.random() * 1000)}`,
         },
       ];
-      setPosts(
-        (prev) => [
-          fakePosts[Math.floor(Math.random() * fakePosts.length)],
-          ...prev,
-        ]
-      );
+      setPosts((prev) => [fakePosts[Math.floor(Math.random() * fakePosts.length)], ...prev]);
     }, 10000);
     return () => clearInterval(interval);
   }, []);
@@ -81,6 +72,7 @@ export default function FeedPage() {
         <button
           onClick={() => setSidebarOpen(true)}
           className="text-2xl font-bold focus:outline-none"
+          aria-label="Open Sidebar"
         >
           ☰
         </button>
@@ -118,15 +110,14 @@ export default function FeedPage() {
             key={post.id}
             className="bg-white rounded-xl shadow p-4 transition hover:shadow-md"
           >
+            {/* Post Header */}
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 rounded-full bg-red-400"></div>
               <div>
                 <p className="font-semibold">{post.username}</p>
                 <p className="text-xs text-gray-500">@{post.username}</p>
               </div>
-              <button className="ml-auto text-gray-500 hover:text-gray-700">
-                ⋮
-              </button>
+              <button className="ml-auto text-gray-500 hover:text-gray-700">⋮</button>
             </div>
 
             {/* Post Image */}
@@ -138,8 +129,10 @@ export default function FeedPage() {
               />
             )}
 
+            {/* Post Text */}
             <p className="text-sm mt-2 text-gray-700">{post.text}</p>
 
+            {/* Post Actions */}
             <div className="flex justify-between text-sm text-gray-600 mt-2">
               <p>❤️ {post.likes}</p>
               <p>💬 {post.comments}</p>
@@ -179,11 +172,7 @@ export default function FeedPage() {
       </nav>
 
       {/* Sidebar */}
-      <Sidebar
-        isOpen={sidebarOpen}
-        toggleSidebar={() => setSidebarOpen(false)}
-        active="Home"
-      />
+      <Sidebar isOpen={sidebarOpen} toggleSidebar={() => setSidebarOpen(false)} active="Home" />
     </div>
   );
 }
