@@ -1,109 +1,48 @@
 // src/pages/HomePage.jsx
-import { useState } from "react";
-import Sidebar from "../components/Sidebar";
-import {
-  Home,
-  Search,
-  PlusSquare,
-  Heart,
-  User,
-  MessageCircle,
-} from "lucide-react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
-  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
-  // toggle function
-  const toggleSidebar = () => setIsOpen(!isOpen);
-
-  const stories = [1, 2, 3, 4, 5];
-  const posts = [1, 2, 3];
+  // Dummy stories
+  const stories = [
+    { id: 1, name: "Your Story", type: "image", src: "https://placekitten.com/400/700" },
+    { id: 2, name: "User1", type: "image", src: "https://placekitten.com/500/800" },
+    { id: 3, name: "User2", type: "video", src: "https://www.w3schools.com/html/mov_bbb.mp4" },
+    { id: 4, name: "User3", type: "image", src: "https://placekitten.com/450/750" },
+    { id: 5, name: "User4", type: "video", src: "https://www.w3schools.com/html/movie.mp4" },
+    { id: 6, name: "User5", type: "image", src: "https://placekitten.com/420/720" },
+  ];
 
   return (
-    <div className="relative min-h-screen flex flex-col bg-gray-50">
-      {/* Sidebar */}
-      <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
+    <div className="p-4 min-h-screen bg-gray-50">
+      <h1 className="text-xl font-bold text-center mb-4">Home</h1>
 
-      {/* Top bar */}
-      <header className="fixed top-0 left-0 w-full bg-white shadow p-2 flex justify-between items-center z-50">
-        <button
-          onClick={toggleSidebar}
-          className="p-2 text-xl"
-          aria-label="Open Sidebar"
-        >
-          ☰
-        </button>
-        <h1 className="font-bold text-lg">Home</h1>
-        <div className="w-8" /> {/* spacer for symmetry */}
-      </header>
-
-      {/* Feed Section */}
-      <main className="flex-1 overflow-y-auto px-4 mt-14 mb-16">
-        {/* Stories */}
-        <section className="flex gap-3 overflow-x-auto pb-3">
-          {stories.map((s) => (
-            <div key={s} className="flex flex-col items-center">
-              <div className="w-16 h-16 rounded-full bg-gray-300" />
-              <p className="text-xs mt-1">User{s}</p>
+      {/* Stories Row */}
+      <div className="flex gap-4 overflow-x-auto py-4">
+        {stories.map((story) => (
+          <div
+            key={story.id}
+            className="flex flex-col items-center cursor-pointer"
+            onClick={() => navigate(`/story/${story.id}`)} // Navigate to StoryPage
+          >
+            <div className="w-16 h-16 rounded-full border-4 border-red-400 flex items-center justify-center overflow-hidden">
+              <img
+                src={`https://placekitten.com/50/50?image=${story.id}`} // Placeholder avatar
+                alt={story.name}
+                className="w-full h-full object-cover"
+              />
             </div>
-          ))}
-        </section>
+            <p className="text-xs mt-1">{story.name}</p>
+          </div>
+        ))}
+      </div>
 
-        {/* Posts */}
-        <section className="space-y-4 mt-4">
-          {posts.map((p) => (
-            <article
-              key={p}
-              className="bg-white shadow rounded-xl p-4 flex flex-col gap-3 hover:shadow-md transition"
-            >
-              {/* User Info */}
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gray-300" />
-                <div>
-                  <p className="font-semibold">User{p}</p>
-                  <p className="text-sm text-gray-500">@username{p}</p>
-                </div>
-              </div>
-
-              {/* Caption */}
-              <p>This is a sample post caption {p}.</p>
-
-              {/* Image */}
-              <div className="w-full h-48 bg-gray-200 rounded-xl"></div>
-
-              {/* Actions */}
-              <div className="flex justify-between text-gray-500 text-sm">
-                <button className="hover:text-blue-500">💬 1.3k</button>
-                <button className="hover:text-blue-500">🔁 500</button>
-                <button className="hover:text-red-500">❤️ 1.2k</button>
-                <button className="hover:text-green-500">📌 Save</button>
-              </div>
-            </article>
-          ))}
-        </section>
-      </main>
-
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 w-full bg-white border-t flex justify-around items-center py-2 z-50">
-        <button className="p-2 hover:text-blue-500">
-          <Home size={26} />
-        </button>
-        <button className="p-2 hover:text-blue-500">
-          <Search size={26} />
-        </button>
-        <button className="p-2 hover:text-blue-500">
-          <PlusSquare size={26} />
-        </button>
-        <button className="p-2 hover:text-red-500">
-          <Heart size={26} />
-        </button>
-        <button className="p-2 hover:text-blue-500">
-          <User size={26} />
-        </button>
-        <button className="p-2 hover:text-blue-500">
-          <MessageCircle size={26} />
-        </button>
-      </nav>
+      {/* Optional content below stories */}
+      <div className="mt-8 text-center text-gray-500">
+        <p>Click a story to view it full-screen like Instagram.</p>
+      </div>
     </div>
   );
 }
