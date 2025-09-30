@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth"; 
 import { auth } from "../firebase"; // Ensure this path is correct
 
+
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
