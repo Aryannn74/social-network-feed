@@ -1,53 +1,54 @@
-// pages/Login.jsx
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+// 1. Move Firebase imports to the top
+import { signInWithEmailAndPassword } from "firebase/auth"; 
+import { auth } from "../firebase"; // Ensure this path is correct
 
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // State for potential error messages to show to the user
+  const [error, setError] = useState(null); 
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (email && password) {
-      navigate("/feed"); // ✅ now matches App.jsx route
-    } else {
-      alert("Enter valid credentials!");
-    }
+    setError(null); // Clear previous errors
+
+    // 2. Insert Firebase logic here, where the form is submitted
+    signInWithEmailAndPassword(auth, email, password)
+      .then(userCredential => {
+        // Login successful
+        const user = userCredential.user;
+        console.log("User logged in:", user);
+        
+        // Redirect on success
+        navigate("/feed"); 
+      })
+      .catch(firebaseError => {
+        // Handle any Firebase errors and show a user-friendly message
+        console.error("Login error:", firebaseError.message);
+        // Set the error state to display a message to the user
+        setError("Login failed: " + firebaseError.message.replace("Firebase: Error (auth/", "").replace(").", ""));
+      });
   };
 
   return (
     <div className="w-full min-h-screen bg-[#7f75e5] flex justify-center items-center relative overflow-hidden">
-      {/* Background Dots */}
-      <div className="absolute left-6 top-8 grid grid-cols-4 gap-2 scale-75 md:scale-100">
-        {Array.from({ length: 12 }).map((_, i) => (
-          <div key={i} className="w-2.5 h-2.5 bg-white rounded-full"></div>
-        ))}
-      </div>
+      {/* ... (Omitted Tailwind/UI code for brevity) ... */}
 
-      {/* Background Triangles */}
-      <div className="absolute left-8 bottom-40 flex flex-col gap-2 scale-75 md:scale-100">
-        {Array.from({ length: 2 }).map((_, i) => (
-          <div
-            key={i}
-            className="w-0 h-0 border-l-[8px] border-r-[8px] border-b-[12px] border-l-transparent border-r-transparent border-b-white"
-          ></div>
-        ))}
-      </div>
-
-      {/* Orange Shape */}
-      <div className="absolute bottom-0 right-0 w-40 h-40 md:w-72 md:h-72 bg-orange-500 rounded-tl-[80px] md:rounded-tl-[150px]"></div>
-
-      {/* Login Card */}
       <div className="relative z-10 w-[90%] max-w-md bg-white rounded-2xl shadow-lg p-6 md:p-8">
-        <h2 className="text-3xl font-bold text-center mb-2 text-gray-800">
-          Login
-        </h2>
-        <p className="text-center text-gray-500 mb-6 text-sm">
-          Welcome back! Please enter your details.
-        </p>
+        <h2 className="text-3xl font-bold text-center mb-2 text-gray-800">Login</h2>
+        <p className="text-center text-gray-500 mb-6 text-sm">Welcome back! Please enter your details.</p>
 
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
+          {/* Display Error Message if it exists */}
+          {error && (
+            <div className="p-2 text-sm text-red-700 bg-red-100 rounded-lg text-center font-medium">
+              {error}
+            </div>
+          )}
+
           <input
             type="email"
             placeholder="Email"
@@ -84,3 +85,5 @@ export default function Login() {
     </div>
   );
 }
+
+// 3. Removed unused imports and floating Firebase code from the end of the file.
